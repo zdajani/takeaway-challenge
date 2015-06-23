@@ -7,19 +7,26 @@ describe Takeout do
   it { is_expected.to respond_to(:add_item).with(2).arguments }
 
 
-  describe "add item" do
-    it "to order with price" do
+  describe "Adding to order" do # Are you really describing a method here? Or a behaviour of the class?
+
+    it "displays a price" do
       subject.add_item :Pizza
       expect(subject.order).to eq [item: :Pizza, amount: 1, price: "£6"]
     end
 
-    it "multiples to order with price" do
-      subject.add_item :Pizza, 2
-      expect(subject.order).to eq [item: :Pizza, amount: 2, price: "£12"]
+    context 'when multiple of the same item are added' do
+
+      it 'aggregates amount and price' do
+        subject.add_item :Pizza, 2 # this is an example of a magic number
+        expect(subject.order).to eq [item: :Pizza, amount: 2, price: "£12"]
+      end
+
     end
 
+    # consider reorganizing this test as above
+
     it "updates total with price" do
-      subject.add_item :Pizza, 2
+      subject.add_item :Pizza, 2 # and here
       expect(subject.total).to eq 12
     end
 
@@ -27,6 +34,12 @@ describe Takeout do
       subject.add_item :Pizza
       subject.add_item :Water
       expect(subject.order).to eq [{item: :Pizza, amount: 1, price: "£6"}, {item: :Water, amount: 1, price: "£1"}]
+    end
+
+    it 'aggregates orders of the same item' do
+      subject.add_item :Pizza
+      subject.add_item :Pizza
+      expect(subject.order).to eq [{item: :Pizza, amount: 2, price: "£12"}] # try to pass this test!
     end
 
     it "raises an error when an item isn't on menu" do

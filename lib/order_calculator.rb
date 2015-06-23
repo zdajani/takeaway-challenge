@@ -1,6 +1,5 @@
 module OrderCalculator
 
-
   def add_to_total item, amount
     total_per_item = @menu[item] * amount
     @total += total_per_item

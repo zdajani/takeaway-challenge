@@ -6,8 +6,8 @@ class Takeout
   attr_reader :menu
   attr_accessor :total, :order
 
-  def initialize
-    @menu = { Pizza: 6,
+  def initialize 
+    @menu = { Pizza: 6, # consider passing in the menu hash, rather than having it hard-coded
               Wings: 4,
               Coke: 2,
               Water: 1 }
@@ -16,26 +16,25 @@ class Takeout
   end
 
   def show_menu
-    menu.each do |item, price|
-       display_menu = "#{item} " + "£#{price}"
-       puts display_menu
-     end
+    menu.map do |item, price| # don't use puts! It couples your object to a particular output: terminal
+      "#{item} " + "£#{price}"
+    end.join("\n")
   end
 
-  def add_item item, amount = 1
+  def add_item item, amount = 1 # consider using keyword syntax to improve this method
     fail 'Item not on menu' unless on_menu? item
     add_to_order item, amount
-    add_to_total item, amount
+    add_to_total item, amount # consider having the total calculated from the collection of orders, rather than have it be stored and added to within an instance variable
     self.display_order
   end
 
   def display_order
-     display = "#{order}; Total: £#{total}"
+     "#{order}; Total: £#{total}"
   end
 
   def pay amount
-    fail 'Incorrect payment amount' if amount != total
-    response = 'Thank you! You will be receiving a text confirmation shortly!'
+    fail 'Incorrect payment amount' unless amount == total # consider unless.. == rather than !=
+    'Thank you! You will be receiving a text confirmation shortly!'
   end
 
 end
